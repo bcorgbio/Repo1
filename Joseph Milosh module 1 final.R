@@ -1,5 +1,6 @@
 library(ggplot2)
 library(tidyverse)
+setwd("~/experimental_methods_in_organismal_bio/Scripts/Repo1")
 
 #dat variable containing the scales dataset
 dat <- read.csv("~/experimental_methods_in_organismal_bio/Data/scales.csv")
