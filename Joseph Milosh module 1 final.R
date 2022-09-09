@@ -13,18 +13,14 @@ dim(dat)
 
 #code that produces a summary of the number of scales punctured for each species at each location
 dat %>% 
-  count(species,specimen,quadrant) %>%
+  count(species,quadrant) %>%
   print()
   
-  #Code that produces a summary of the number of specimens sampled for each species (code from line 19 and 23 are the same)
+#Code that produces a summary of the number of specimens sampled for each species (code from line 19 and 23 are the same)
 dat %>% 
   count(species,specimen,name = "n.specimens") %>%
   print()
 
-dat %>%
-  group_by(species, specimen) %>%
-  summarise(n=n())%>%
-  print(n= 25)
 
 #Code that produces a PDF file containing 6 figures, one for each species that includes a boxplot of puncture force verus quadrant.
 for(i in species){
@@ -35,5 +31,3 @@ for(i in species){
 }
 
 pdf("species.quadrant.Joe.Milosh.pdf")
-
-
