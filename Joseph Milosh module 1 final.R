@@ -22,7 +22,7 @@ dat %>%
   print()
 
 
-#Code that produces a PDF file containing 6 figures, one for each species that includes a boxplot of puncture force verus quadrant.
+#Code that produces 6 figures, one for each species that includes a boxplot of puncture force verus quadrant.
 for(i in species){
   p <- dat %>%
     filter(species==i)%>%
@@ -30,4 +30,12 @@ for(i in species){
   print(p)
 }
 
-pdf("species.quadrant.Joe.Milosh.pdf")
+#Code creating a pdf of plot figures
+pdf("species.quadrant.joe.milosh.pdf")
+for(i in species){
+  p <- dat %>%
+    filter(species==i)%>%
+    ggplot()+geom_boxplot(aes(x=quadrant,y=N))+ggtitle(i)
+  print(p)
+}
+dev.off()
