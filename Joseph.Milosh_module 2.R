@@ -56,9 +56,6 @@ pseed.sum.max %>%
 pseed.met.rate <-read_csv("pseed.met.rate.csv")
 as_tibble(pseed.met.rate)
 
-pseed.met.rate$bl.s <- as.numeric(as.character(pseed.met.rate$bl.s))
-pseed.sum.max$bl.s <- as.numeric(as.character(pseed.sum.max$bl.s))
-
 pseed.sum.max <- pseed.sum.max %>% 
   left_join(pseed.met.rate,by=c("date"="date","fish"="fish","bl.s"="bl.s")) %>% 
   print()
