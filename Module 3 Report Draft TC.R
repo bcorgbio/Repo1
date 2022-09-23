@@ -91,6 +91,19 @@ lmtest2.res.plot <- anole.log.res%>%
   ggplot(aes(x=HTotal,y=lm2res)) + geom_boxplot()
 print(lmtest2.res.plot)
 
+anole.log.res <- anole.log %>% 
+  mutate(lmPHres=residuals(anolePH.lm)) %>% 
+  mutate(lmPDres=residuals(anolePD.lm))
+
+print(anole.log.res)
+
+anolePH.log.res.plot <- anole.log.res %>% 
+  ggplot(aes(x=PH,y=lmPHres))+geom_point()
+anolePH.log.res.plot
+
+anolePD.log.res.plot <- anole.log.res %>% 
+  ggplot(aes(x=PD,y=lmPDres))+geom_point()
+anolePH.log.res.plot
 
 #4 Under a BM model of trait evolution and using the tree provided,
   #construct phylogenetic least squares models of the hindlimb-SVL
