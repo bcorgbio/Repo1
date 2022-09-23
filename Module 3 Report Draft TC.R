@@ -54,32 +54,43 @@ anole.lm2 <- lm(HTotal~SVL+ArbPD,anole.log)
   #against these covariates. This will require mutating a data tibble to
   #include residuals from both models. Please produce two separate plots.
 
+#not sure exactly what we're graphing here
+# seems like it should be residuals vs. covariates somehow
+
+  #adding residuals from models to tibble
 summary(anole.lm1)
 anole.log.res <- anole.log %>%
   mutate(lm1res=residuals(anole.lm1))%>%
   mutate(lm2res=residuals(anole.lm2))
 
+  #point plot of model 1's residuals sorted by ecomorph
 anole.log.res%>%
   ggplot(aes(Ecomorph2,lm1res))+geom_point()
 
+  #box plot of model 1's residuals sorted by ecomorph
 lm1.res.plot <- anole.log.res%>%
   ggplot(aes(x=Ecomorph2,y=lm1res)) +geom_boxplot()
 print(lm1.res.plot)
 
+  #point plot of model 2's residuals sorted by ecomorph
 anole.log.res%>%
   ggplot(aes(Ecomorph2,lm2res))+geom_point()
 
+  #box plot of model 1's residuals sorted by ecomorph
 lm2.res.plot <- anole.log.res%>%
   ggplot(aes(x=Ecomorph2,y=lm2res)) +geom_boxplot()
 print(lm2.res.plot)
 
+  #box plot of PH vs. model 1's residuals
 lmtest.res.plot <- anole.log.res%>%
   ggplot(aes(x=PH,y=lm1res)) +geom_boxplot()
 print(lmtest.res.plot)
 
+#box plot of PH vs. model 2's residuals
 lmtest2.res.plot <- anole.log.res%>%
-  ggplot(aes(x=HTotal,y=lm1res)) + geom_boxplot()
+  ggplot(aes(x=HTotal,y=lm2res)) + geom_boxplot()
 print(lmtest2.res.plot)
+
 
 #4 Under a BM model of trait evolution and using the tree provided,
   #construct phylogenetic least squares models of the hindlimb-SVL
