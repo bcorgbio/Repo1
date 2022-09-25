@@ -91,19 +91,19 @@ lmtest2.res.plot <- anole.log.res%>%
   ggplot(aes(x=HTotal,y=lm2res)) + geom_boxplot()
 print(lmtest2.res.plot)
 
-anole.log.res <- anole.log %>% 
-  mutate(lmPHres=residuals(anolePH.lm)) %>% 
-  mutate(lmPDres=residuals(anolePD.lm))
 
-print(anole.log.res)
+  #are these the correct codes for the graphs we want?
+anole.log.res <- anole.log %>%
+  mutate(lmPHres=residuals(anole.lm1))%>%
+  mutate(lmPDres=residuals(anole.lm2))
 
 anolePH.log.res.plot <- anole.log.res %>% 
   ggplot(aes(x=PH,y=lmPHres))+geom_point()
 anolePH.log.res.plot
 
 anolePD.log.res.plot <- anole.log.res %>% 
-  ggplot(aes(x=PD,y=lmPDres))+geom_point()
-anolePH.log.res.plot
+  ggplot(aes(x=ArbPD,y=lmPDres))+geom_point()
+anolePD.log.res.plot
 
 #4 Under a BM model of trait evolution and using the tree provided,
   #construct phylogenetic least squares models of the hindlimb-SVL
@@ -111,6 +111,7 @@ anolePH.log.res.plot
     #* A PGLS model with the hindlimb-SVL relationship + perch height
     #* A PGLS model with the hindlimb-SVL relationship + perch diameter
     #* A PGSL model with the hindlimb-SVL relationship + perch height + perch diameter
+anole.tree <- read.tree("anole.tre")
 
 #PGLS under BM, + perch height
 pgls.BM1 <- gls(HTotal ~SVL+PH, correlation = corBrownian(1,phy = anole.tree,form=~Species),data = anole.log.res, method = "ML")
@@ -146,21 +147,17 @@ anova(pgls.BM3)
 pgls.BM4 <- gls(HTotal ~SVL, correlation = corBrownian(1,phy = anole.tree,form=~Species),data = anole.log.res, method = "ML")
 
 anole.log.BMres <- anole.log.res%>%
-  mutate(BM3.res=residuals(pgls.BM3))%>%
-  mutate(BM4.res=residuals(pgls.BM4))
+  mutate("No.covariates"=residuals(pgls.BM4))%>%
+  mutate("With.covariates"=residuals(pgls.BM3))
 
 anole.log.BMres.long <- anole.log.BMres%>%
-  dplyr::select(BM3.res,BM4.res)%>%
-  pivot_longer(cols=c("BM3.res","BM4.res"))%>%
-  print()
-  
-    #we think this might be something like the the 2 facet plot at the end
-      #of the project examples with residuals on the y-axis, 1 plot of the
-      #residuals from the model with both covariates and the other with the
-      #residuals from a model with no covariates
-      
-  
-  
+  dplyr::select(No.covariates,With.covariates)%>%
+  pivot_longer(cols=c("No.covariates","With.covariates"))%>%
+  print() 
+
+anole.log.BMres.long %>% 
+  ggplot(aes(x=name,y=value)) +geom_boxplot() + stat_summary(fun=mean, geom="point", size=3) +xlab("Model")+ylab("Residuals")
+
   
   
   
