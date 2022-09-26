@@ -23,19 +23,23 @@ anole.lm1 <- lm(HTotal~SVL + PH,anole.log)
 anole.lm2 <- lm(HTotal~SVL+ArbPD,anole.log)
 
 #3 Plot of residuals vs. covariates
-
+#change this to against ecomorph - boxplots example
   #adding residuals from models to tibble
 anole.log.res <- anole.log %>%
   mutate(lmPHres=residuals(anole.lm1))%>%
   mutate(lmPDres=residuals(anole.lm2))
 
   #plots
-anolePH.log.res.plot <- anole.log.res %>% 
-  ggplot(aes(x=PH,y=lmPHres))+geom_point()
+    #PH covariate
+anolePH.log.res.plot <- anole.log.res %>%
+  ggplot(aes(x=Ecomorph2,y=lmPHres)) + geom_boxplot() +
+  stat_summary(fun=mean, geom="point", size=3)
 anolePH.log.res.plot
 
-anolePD.log.res.plot <- anole.log.res %>% 
-  ggplot(aes(x=ArbPD,y=lmPDres))+geom_point()
+    #ArbPD covariate
+anolePD.log.res.plot <- anole.log.res %>%
+  ggplot(aes(x=Ecomorph2,y=lmPDres)) + geom_boxplot() +
+  stat_summary(fun=mean, geom="point", size=3)
 anolePD.log.res.plot
 
 #4 BM Models
@@ -52,21 +56,16 @@ pgls.BM3 <- gls(HTotal ~SVL+PH+ArbPD, correlation = corBrownian(1,phy = anole.tr
 
 
 #5 Assessing fit
-
 anole.aic <- AICc(pgls.BM1,pgls.BM2,pgls.BM3)
 aicw(anole.aic$AICc)
-#        fit     delta           w
-#1 -64.77956 10.746149 0.003247185
-#2 -73.81081  1.714901 0.296905077
-#3 -75.52571  0.000000 0.699847738
+  #pgls.BM3 has lowest AIC score
 
 anova(pgls.BM3)
 #both covariates are significant predictors of hind-limb-SVL relationship
 #both p-values are <0.05)
 
 
-#6 Effect of your covariate(s) on  hindlimb residuals ofbest fitting PGLS model
-
+#6 Effect of your covariate(s) on  hindlimb residuals of best fitting PGLS model
 pgls.BM4 <- gls(HTotal ~SVL, correlation = corBrownian(1,phy = anole.tree,form=~Species),data = anole.log.res, method = "ML")
 
 anole.log.BMres <- anole.log.res%>%
