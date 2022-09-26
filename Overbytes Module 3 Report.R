@@ -30,17 +30,11 @@ anole.log.res <- anole.log %>%
   mutate(lmPDres=residuals(anole.lm2))
 
   #plots
-    #PH covariate
-anolePH.log.res.plot <- anole.log.res %>%
-  ggplot(aes(x=Ecomorph2,y=lmPHres)) + geom_boxplot() +
-  stat_summary(fun=mean, geom="point", size=3)
-anolePH.log.res.plot
-
-    #ArbPD covariate
-anolePD.log.res.plot <- anole.log.res %>%
-  ggplot(aes(x=Ecomorph2,y=lmPDres)) + geom_boxplot() +
-  stat_summary(fun=mean, geom="point", size=3)
-anolePD.log.res.plot
+anole.log.res%>%
+  dplyr::select(Ecomorph2,lmPHres,lmPDres)%>%
+  pivot_longer(cols=c("lmPHres","lmPDres"))%>%
+  print%>%
+  ggplot(aes(x=Ecomorph2,y=value)) +geom_boxplot() +stat_summary(fun=mean, geom="point", size=3)+facet_grid(name~.,scales = "free_y")+ylab("residual")
 
 #4 BM Models
 anole.tree <- read.tree("anole.tre")
