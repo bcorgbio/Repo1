@@ -155,9 +155,16 @@ anole.log.BMres.long <- anole.log.BMres%>%
   pivot_longer(cols=c("No.covariates","With.covariates"))%>%
   print() 
 
-anole.log.BMres.long %>% 
-  ggplot(aes(x=name,y=value)) +geom_boxplot() + stat_summary(fun=mean, geom="point", size=3) +xlab("Model")+ylab("Residuals")
-
+anole.log.BMres %>%
+  dplyr::select(Ecomorph2,No.covariates,With.covariates)%>%
+  pivot_longer(cols=c("No.covariates","With.covariates"))%>%
+  print%>%
+  ggplot(aes(x=Ecomorph2,y=value)) +geom_boxplot() +
+  stat_summary(fun=mean, geom="point", size=3)+
+  facet_grid(name~.,scales = "free_y")+ylab("Residuals")
   
-  
+#another graph option
+anole.log %>%
+  ggplot(aes(HTotal,SVL,col=Ecomorph2))+geom_point()+
+  geom_smooth(formula = anole.log$HTotal ~anole.log$SVL)
   
