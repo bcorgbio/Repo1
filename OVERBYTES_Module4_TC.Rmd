@@ -65,6 +65,9 @@ pgls.OU2 <- gls(HTotal ~SVL * Ecomorph2, correlation = corMartins(0,phy = anole.
 #AIC operations
 anole.phylo.aic <- AICc(pgls.BM1,pgls.BM2,pgls.OU1,pgls.OU2)
 anole.phylow.aicw <- aicw(anole.phylo.aic$AICc)
+
+anole.phylow.aicw %>% 
+  kable(caption = "Comparison of model fits using the Akaike Information Criterion (AIC)")
 ```
 
 ```{r, "add residuals"}
@@ -73,6 +76,12 @@ anole.log <- anole.log%>%
   mutate(phylo.res=residuals(pgls.BM2))
 ```
 
+```{r, "HTotal vs SVL", fig.cap="Mean snout-vent length plotted against mean total hind-limb length, color-coded by ecomorph"}
+anole.log%>%
+  ggplot(aes(HTotal,SVL,col=Ecomorph2))+geom_point()+geom_smooth(method="lm")
+```
+
+
 ```{r,"plot residuals", fig.cap="Boxplot of phylogenetically corrected hindlimb residuals versus anole ecomorph"}
 #plot residuals
 p.eco.phylo <- anole.log%>%
@@ -80,6 +89,9 @@ ggplot(aes(x=Ecomorph2,y=phylo.res)) +geom_boxplot() +stat_summary(fun=mean, geo
 
 print(p.eco.phylo)
 ```
+
+
+#An altered “AIC” chunk that produces a table of AIC values with kable. Be sure to include a descriptive caption
 
 
 # Discussion
