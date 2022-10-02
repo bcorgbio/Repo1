@@ -82,8 +82,10 @@ rownames <- rownames(anole.phylow.aicw)
 print(rownames)
 rownames(anole.phylow.aicw) <- c('PGLS under BM and no ecomorph', 'PGLS under BM with ecomorph', 'PGLS under OU with no ecomorph', 'PGLS under OU with ecomorph')
 
+#Descriptive caption for "AIC" chunk
 anole.phylow.aicw %>% 
-  kable(caption = "Comparison of model fits using the Akaike Information Criterion (AIC)")
+  kable(caption = "This table displays AIC values with kable allows for a comparison of ecomorph 
+model fits using Akaike Information Criterion.")
 ```
 
 ### Accounting for Standard Error in Data Through The creation of Residuals
@@ -98,7 +100,7 @@ anole.log <- anole.log%>%
 anole.log%>%
   ggplot(aes(HTotal,SVL,col=Ecomorph2))+geom_point()+geom_smooth(method="lm")
 ```
-
+  
 ### Regression plot of log-transformed HTotal vs SVL with points colored by Ecomorph2 (with a descriptive caption).
 ```{r}
 print(anole)
@@ -113,7 +115,9 @@ anole.log.plot <- anole%>%
 print(anole.log.plot)
   
 ```
-
+#Descriptive caption for regresssion plot 
+  kable(caption = "This figure displays the regression plot of log-transformed HTotal vs SVL with points colored by Ecomorph2.")
+  
 ### Plot of Phylogenetically Corrected Hindlimb Residuals Against Anole Ecomorph
 ```{r,"plot residuals", fig.cap="Boxplot of phylogenetically corrected hindlimb residuals versus anole ecomorph"}
 
