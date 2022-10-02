@@ -34,7 +34,8 @@ The central theme of this project will be to assess the morphological and allome
 
 # Methods
 Briefly outline the specifics of how the question will be answered.
-
+The sets of data on anole lizards were taken from @hagey2017there and log transformed ultimately to form two linear models that represented the effect of perch height and diameter on hindlimb length. The residuals from these plots were mutated into a tibble and plotted against the discrete factors to see the visual effect of height and perch diameter on hindlimb-SVL relationship. Then, using the anole phylogenetic tree created by data from @poe2017phylogenetic, phylogenetic least squares models of hindlimb-SVL relationships were manufactured featuring all unique combinations of these two covariates: 
+  
 ### Loading the data
 ```{r, "load the data"}
 anole <- read_csv("anole.dat.csv")
