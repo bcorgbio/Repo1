@@ -125,10 +125,12 @@ print(p.eco.phylo)
 
 # Results
 Briefly summarize the results.
-
+Results from Ecomorph2 allow us to determine there is a correlation between HTotal and SVL. There are differences within each anole ecomorph with crown-giant showing the greatest correlation of HTotal and SVL compared to the other species studied. 
+  
 # Discussion
 Briefly discuss the importance of the results (i.e., how they relate to the main question).
-
+Importance of the results further show there are significant ways to show the morphological and allometric differences among ecomorphs. There exists different relationships, including correlation among different lengths between snout-vent/hind-limb length that can be studied and evaluated to understand evolution. There are multiple variations within different species that can be concluded which further allow for the correlating evaluation between size relationships, frequency, and evolution. 
+  
 # Author Contributions
 Briefly state what the contributions of each team member to the project.
 
