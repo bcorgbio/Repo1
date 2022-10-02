@@ -1,8 +1,9 @@
 ---
-title: "OVERBYTES_Module4_JM"
+title: "OVERBYTES Module4 JM"
 author: "Joseph Milosh"
 date: "2022-10-02"
 output: html_document
+bibliography: BIOL3140-theoverbytesM4-JM.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -27,10 +28,12 @@ The central theme of this project will be to assess the morphological and allome
 4.  Evaluate this hindlimb-size relationship using standard frequentist models within and without a phylogenetic context.
 5. Using an information theory approach, assess the fit of phylogenetically corrected models of hind-limb variation under different modes of character evolution.
 
+
 <center>
-### Centered image of an *Anolis* lizard
-<center>
+### Centered image of an *Anolis* lizard [@Hirst]
 ![Image of The Anolis Lizard](https://upload.wikimedia.org/wikipedia/commons/4/4a/Anole_Lizard_Hilo_Hawaii_edit.jpg)
+<center>
+
 
 # Methods
 Briefly outline the specifics of how the question will be answered.
@@ -133,4 +136,5 @@ Briefly discuss the importance of the results (i.e., how they relate to the main
 Briefly state what the contributions of each team member to the project.
 
 # References
-Populate a bibliography section that includes the works cited in the text.
+
+
