@@ -37,7 +37,8 @@ The central theme of this project will be to assess the morphological and allome
 
 # Methods
 Briefly outline the specifics of how the question will be answered.
-
+The sets of data on anole lizards were taken from @hagey2017there and log transformed ultimately to form two linear models that represented the effect of perch height and diameter on hindlimb length. The residuals from these plots were mutated into a tibble and plotted against the discrete factors to see the visual effect of height and perch diameter on hindlimb-SVL relationship. Then, using the anole phylogenetic tree created by data from @poe2017phylogenetic, phylogenetic least squares models of hindlimb-SVL relationships were manufactured featuring all unique combinations of these two covariates: 
+  
 ### Loading the data
 ```{r, "load the data"}
 anole <- read_csv("anole.dat.csv")
@@ -85,8 +86,10 @@ rownames <- rownames(anole.phylow.aicw)
 print(rownames)
 rownames(anole.phylow.aicw) <- c('PGLS under BM and no ecomorph', 'PGLS under BM with ecomorph', 'PGLS under OU with no ecomorph', 'PGLS under OU with ecomorph')
 
+# Descriptive caption for "AIC" chunk
 anole.phylow.aicw %>% 
-  kable(caption = "Comparison of model fits using the Akaike Information Criterion (AIC)")
+  kable(caption = "This table displays AIC values with kable allows for a comparison of ecomorph 
+model fits using Akaike Information Criterion.")
 ```
 
 ### Accounting for Standard Error in Data Through The creation of Residuals
@@ -101,7 +104,7 @@ anole.log <- anole.log%>%
 anole.log%>%
   ggplot(aes(HTotal,SVL,col=Ecomorph2))+geom_point()+geom_smooth(method="lm")
 ```
-
+  
 ### Regression plot of log-transformed HTotal vs SVL with points colored by Ecomorph2 (with a descriptive caption).
 ```{r}
 print(anole)
@@ -116,7 +119,9 @@ anole.log.plot <- anole%>%
 print(anole.log.plot)
   
 ```
-
+# Descriptive caption for regresssion plot 
+  kable(caption = "This figure displays the regression plot of log-transformed HTotal vs SVL with points colored by Ecomorph2.")
+  
 ### Plot of Phylogenetically Corrected Hindlimb Residuals Against Anole Ecomorph
 ```{r,"plot residuals", fig.cap="Boxplot of phylogenetically corrected hindlimb residuals versus anole ecomorph"}
 
@@ -128,10 +133,12 @@ print(p.eco.phylo)
 
 # Results
 Briefly summarize the results.
-
+Results from Ecomorph2 allow us to determine there is a correlation between HTotal and SVL. There are differences within each anole ecomorph with crown-giant showing the greatest correlation of HTotal and SVL compared to the other species studied. 
+  
 # Discussion
 Briefly discuss the importance of the results (i.e., how they relate to the main question).
-
+Importance of the results further show there are significant ways to show the morphological and allometric differences among ecomorphs. There exists different relationships, including correlation among different lengths between snout-vent/hind-limb length that can be studied and evaluated to understand evolution. There are multiple variations within different species that can be concluded which further allow for the correlating evaluation between size relationships, frequency, and evolution. 
+  
 # Author Contributions
 Briefly state what the contributions of each team member to the project.
 

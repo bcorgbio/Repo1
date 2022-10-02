@@ -3,6 +3,7 @@ title: "Project 4 TC"
 author: "Overbytes"
 date: "2022-09-29"
 output: html_document
+bibliography: BIOL3140-theoverybytesM4.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -89,7 +90,7 @@ anole.phylow.aicw %>%
   kable(caption = "Comparison of model fits using the Akaike Information Criterion (AIC)")
 ```
 
-### Accounting for Standard Error in Data Through The creation of Residuals
+### Accounting for Standard Error in Data Through The Creation of Residuals
 ```{r, "add residuals"}
 #add phylo-corrected residuals
 anole.log <- anole.log%>%
@@ -105,7 +106,7 @@ anole.log%>%
 ### Regression plot of log-transformed HTotal vs SVL with points colored by Ecomorph2 (with a descriptive caption).
 ```{r}
 print(anole)
-anole.log <- anole%>%
+anole.log.plot <- anole%>%
   left_join(anole.eco)%>%
   filter(!Ecomorph%in%c("U","CH"))%>%
   na.omit()%>%
@@ -114,7 +115,9 @@ anole.log <- anole%>%
   print() %>% 
   ggplot(aes(x=log_HTotal, y=SVL, col=Ecomorph2)) +
   geom_point() +
-  geom_smooth(method = "lm") 
+  geom_smooth(method = "lm")
+
+print(anole.log.plot)
  
 
 ```
@@ -123,8 +126,10 @@ anole.log <- anole%>%
 ### Plot of Phylogenetically Corrected Hindlimb Residuals Against Anole Ecomorph
 ```{r,"plot residuals", fig.cap="Boxplot of phylogenetically corrected hindlimb residuals versus anole ecomorph"}
 #plot residuals
-p.eco.phylo <- anole.log%>%
-ggplot(aes(x=Ecomorph2,y=phylo.res)) +geom_boxplot() +stat_summary(fun=mean, geom="point", size=3)
+p.eco.phylo <- anole.log %>%
+  ggplot(aes(x=Ecomorph2,y=phylo.res)) + geom_boxplot()+
+  stat_summary(fun=mean, geom="point", size=3) %>% 
+  print()
 
 print(p.eco.phylo)
 ```
@@ -139,5 +144,5 @@ Briefly discuss the importance of the results (i.e., how they relate to the main
 Briefly state what the contributions of each team member to the project.
 
 # References
-Populate a bibliography section that includes the works cited in the text.
+@article{hagey2017there}
 
