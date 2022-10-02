@@ -3,7 +3,7 @@ title: "Project 4 TC"
 author: "Overbytes"
 date: "2022-09-29"
 output: html_document
-bibliography: BIOL3140-theoverybytesM4.bib
+bibliography: BIOL2140-theoverybytesM4.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -36,7 +36,9 @@ The central theme of this project will be to assess the morphological and allome
 ![Image of The Anolis Lizard](https://upload.wikimedia.org/wikipedia/commons/4/4a/Anole_Lizard_Hilo_Hawaii_edit.jpg)
 
 # Methods
-Briefly outline the specifics of how the question will be answered.
+
+The sets of data on anole lizards were taken from @hagey2017there (omitting any rows with missing values) and log transformed. Using the anole phylogenetic tree created by data from @poe2017phylogenetic, four phylogenetic generalized least squares (PGLS) models were created for the hindlimb-SVL relationship, two using the Ornstein-Uhlenbeck (OU) model and two using the Brownian motion model, both with simple regression models that do not include ecomorph and then models that do. The fit of these models were then compared utilizing the Akaike Information Criterion (AIC); these fits are also visualized with various graphs, including the residuals of each model.
+
 
 ### Loading the data
 
@@ -144,5 +146,5 @@ Briefly discuss the importance of the results (i.e., how they relate to the main
 Briefly state what the contributions of each team member to the project.
 
 # References
-@article{hagey2017there}
+
 
