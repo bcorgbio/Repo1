@@ -98,12 +98,22 @@ anole.log.res <- anole.log %>%
   mutate(lmPDres=residuals(anole.lm2))
 
 anolePH.log.res.plot <- anole.log.res %>% 
+  ggplot(aes(x=PH,y=lmPHres, col=Ecomorph))+geom_point()+geom_smooth(method="lm")
+anolePH.log.res.plot
+
+anolePH.log.res.plot <- anole.log.res %>% 
   ggplot(aes(x=PH,y=lmPHres))+geom_point()
 anolePH.log.res.plot
 
 anolePD.log.res.plot <- anole.log.res %>% 
   ggplot(aes(x=ArbPD,y=lmPDres))+geom_point()
 anolePD.log.res.plot
+
+anole.log.res%>%
+  dplyr::select(Ecomorph2,lmPHres,lmPDres)%>%
+  pivot_longer(cols=c("lmPHres","lmPDres"))%>%
+  print%>%
+  ggplot(aes(x=Ecomorph2,y=value)) +geom_boxplot() +stat_summary(fun=mean, geom="point", size=3)+facet_grid(name~.,scales = "free_y")+ylab("residual")
 
 #4 Under a BM model of trait evolution and using the tree provided,
   #construct phylogenetic least squares models of the hindlimb-SVL

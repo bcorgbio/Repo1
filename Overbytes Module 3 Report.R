@@ -84,5 +84,8 @@ anole.log.BMres %>%
   facet_grid(name~.,scales = "free_y")+ylab("Residuals")
 
 
+## Plot the residulas vs. the hindlimblength; our current set-up has a facet wrap which makes comparison difficult. Could combine into one plot grouping covariate v. no covariate and group based on color to compare more easily.
+
+
 
 
