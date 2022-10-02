@@ -82,7 +82,7 @@ rownames <- rownames(anole.phylow.aicw)
 print(rownames)
 rownames(anole.phylow.aicw) <- c('PGLS under BM and no ecomorph', 'PGLS under BM with ecomorph', 'PGLS under OU with no ecomorph', 'PGLS under OU with ecomorph')
 
-#Descriptive caption for "AIC" chunk
+# Descriptive caption for "AIC" chunk
 anole.phylow.aicw %>% 
   kable(caption = "This table displays AIC values with kable allows for a comparison of ecomorph 
 model fits using Akaike Information Criterion.")
@@ -115,7 +115,7 @@ anole.log.plot <- anole%>%
 print(anole.log.plot)
   
 ```
-#Descriptive caption for regresssion plot 
+# Descriptive caption for regresssion plot 
   kable(caption = "This figure displays the regression plot of log-transformed HTotal vs SVL with points colored by Ecomorph2.")
   
 ### Plot of Phylogenetically Corrected Hindlimb Residuals Against Anole Ecomorph
