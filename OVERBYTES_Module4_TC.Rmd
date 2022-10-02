@@ -21,13 +21,23 @@ library(knitr)
 # Introduction
 Include a brief background to the anole project (why are we studying this anyway?), what the main questions is, and how this question will be answered.
 
+The central theme of this project will be to assess the morphological and allometric differences between ecomorphs within the genus Anolis. The term ecomorph describes a group of species, perhaps not sharing a most recent common ancestor, with a similar ecological niche and behavior within the context of this niche. In order to assess the differences between these ecomorphs, we will be conducting the following analyses:
 
+1. Visualize how hind limb length varies with size (i.e., allometry!).
+2. Visualize and asses how hind limb length vs. size relationship covary with ecological niche.
+3. Learn more complex operations in ggplot than we’ve undertaken so far.
+4.  Evaluate this hindlimb-size relationship using standard frequentist models within and without a phylogenetic context.
+5. Using an information theory approach, assess the fit of phylogenetically corrected models of hind-limb variation under different modes of character evolution.
+
+<center>
+### Centered image of an *Anolis* lizard
+<center>
+![Image of The Anolis Lizard](https://upload.wikimedia.org/wikipedia/commons/4/4a/Anole_Lizard_Hilo_Hawaii_edit.jpg)
 
 # Methods
 Briefly outline the specifics of how the question will be answered.
 
-# Results
-Briefly summarize the results.
+### Loading the data
 
 ```{r, "load the data"}
 anole <- read_csv("anole.dat.csv")
@@ -35,6 +45,7 @@ anole.eco <- read_csv("anole.eco.csv")
 anole.tree <- read.tree("anole.tre")
 ```
 
+### Cleaning and Merging the Data Sets
 ```{r, "join, filter, mutate to log"}
 anole2 <- anole%>%
 left_join(anole.eco)%>%
@@ -45,6 +56,7 @@ anole.log <- anole2%>%
   mutate_at(c("SVL", "HTotal","PH","ArbPD"),log)
 ```
 
+### Creating PGLS Models
 ```{r, "PGLS models"}
 ### phylogenetic GLS models
 
@@ -61,27 +73,54 @@ pgls.OU1 <- gls(HTotal ~SVL, correlation = corMartins(0,phy = anole.tree,form=~S
 pgls.OU2 <- gls(HTotal ~SVL * Ecomorph2, correlation = corMartins(0,phy = anole.tree,form=~Species),data = anole.log, method = "ML")
 ```
 
+### An altered "AIC" chunk that  produces a table of AIC values with kable, a descriptive caption, and row names for data clarication.
+
 ```{r, "AIC"}
 #AIC operations
 anole.phylo.aic <- AICc(pgls.BM1,pgls.BM2,pgls.OU1,pgls.OU2)
-anole.phylow.aicw <- aicw(anole.phylo.aic$AICc)
+anole.phylow.aicw <- aicw(anole.phylo.aic$AICc) 
+
+print(anole.phylow.aicw)
+rownames <- rownames(anole.phylow.aicw)
+print(rownames)
+rownames(anole.phylow.aicw) <- c('PGLS under BM and no ecomorph', 'PGLS under BM with ecomorph', 'PGLS under OU with no ecomorph', 'PGLS under OU with ecomorph')
 
 anole.phylow.aicw %>% 
   kable(caption = "Comparison of model fits using the Akaike Information Criterion (AIC)")
 ```
 
+### Accounting for Standard Error in Data Through The creation of Residuals
 ```{r, "add residuals"}
 #add phylo-corrected residuals
 anole.log <- anole.log%>%
   mutate(phylo.res=residuals(pgls.BM2))
 ```
 
+### Plot of Snout-Vent Length Against Mean Total Hind-Limb Length, Color Coded by Ecomorph
 ```{r, "HTotal vs SVL", fig.cap="Mean snout-vent length plotted against mean total hind-limb length, color-coded by ecomorph"}
 anole.log%>%
   ggplot(aes(HTotal,SVL,col=Ecomorph2))+geom_point()+geom_smooth(method="lm")
 ```
 
+### Regression plot of log-transformed HTotal vs SVL with points colored by Ecomorph2 (with a descriptive caption).
+```{r}
+print(anole)
+anole.log <- anole%>%
+  left_join(anole.eco)%>%
+  filter(!Ecomorph%in%c("U","CH"))%>%
+  na.omit()%>%
+  mutate_at(c("HTotal"),log)%>%
+  rename("log_HTotal" = "HTotal") %>% 
+  print() %>% 
+  ggplot(aes(x=log_HTotal, y=SVL, col=Ecomorph2)) +
+  geom_point() +
+  geom_smooth(method = "lm") 
+ 
 
+```
+
+
+### Plot of Phylogenetically Corrected Hindlimb Residuals Against Anole Ecomorph
 ```{r,"plot residuals", fig.cap="Boxplot of phylogenetically corrected hindlimb residuals versus anole ecomorph"}
 #plot residuals
 p.eco.phylo <- anole.log%>%
@@ -90,9 +129,8 @@ ggplot(aes(x=Ecomorph2,y=phylo.res)) +geom_boxplot() +stat_summary(fun=mean, geo
 print(p.eco.phylo)
 ```
 
-
-#An altered “AIC” chunk that produces a table of AIC values with kable. Be sure to include a descriptive caption
-
+# Results
+Briefly summarize the results.
 
 # Discussion
 Briefly discuss the importance of the results (i.e., how they relate to the main question).
@@ -103,22 +141,3 @@ Briefly state what the contributions of each team member to the project.
 # References
 Populate a bibliography section that includes the works cited in the text.
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
