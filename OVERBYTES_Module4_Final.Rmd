@@ -1,0 +1,137 @@
+---
+title: "OVERBYTES Module4 Final"
+author: "The Overbytes"
+date: "2022-10-02"
+output: html_document
+bibliography: BIOL3140-theoverbytesM4.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r,include=FALSE}
+library(tidyverse)
+library(ape)
+library(nlme)
+library(MuMIn)
+library(geiger)
+library(knitr)
+```
+
+# Introduction
+
+The central theme of this project will be to assess the morphological and allometric differences between ecomorphs within the genus Anolis. The term ecomorph describes a group of species, not sharing a most recent common ancestor, but with a similar ecological niche and behavior within the context of this niche. In order to assess the differences between these ecomorphs, we determined how hind limb length varies with size, further relating to ecological niche in a phylogenetic context. 
+
+
+<center>
+### Centered image of an *Anolis* lizard [@Hirst]
+![Image of The Anolis Lizard](https://upload.wikimedia.org/wikipedia/commons/4/4a/Anole_Lizard_Hilo_Hawaii_edit.jpg)
+<center>
+
+
+# Methods
+The sets of data on anole lizards were taken from @hagey2017there (omitting any rows with missing values) and log transformed. Using the anole phylogenetic tree created by data from @poe2017phylogenetic, four phylogenetic generalized least squares (PGLS) models were created for the hindlimb-SVL relationship, two using the Ornstein-Uhlenbeck (OU) model and two using the Brownian motion model, both with simple regression models that do not include ecomorph and then models that do. The fit of these models were then compared utilizing the Akaike Information Criterion (AIC); these fits are also visualized with various graphs, including the residuals of each model.
+  
+### Loading the Data
+```{r, "load the data"}
+anole <- read_csv("anole.dat.csv")
+anole.eco <- read_csv("anole.eco.csv")
+anole.tree <- read.tree("anole.tre")
+```
+
+### Cleaning and Merging the Data Sets
+```{r, "join, filter, mutate to log"}
+anole2 <- anole%>%
+left_join(anole.eco)%>%
+  filter(!Ecomorph%in%c("U","CH"))%>%
+  na.omit()
+
+anole.log <- anole2%>%
+  mutate_at(c("SVL", "HTotal","PH","ArbPD"),log)
+```
+
+### Creating PGLS Models
+```{r, "PGLS models"}
+### phylogenetic GLS models
+
+#PGLS under BM, no ecomorph
+pgls.BM1 <- gls(HTotal ~SVL, correlation = corBrownian(1,phy = anole.tree,form=~Species),data = anole.log, method = "ML")
+
+#PGLS under BM, w ecomorph
+pgls.BM2 <- gls(HTotal ~SVL * Ecomorph2, correlation = corBrownian(1,phy = anole.tree,form=~Species),data = anole.log, method = "ML")
+
+#PGLS under OU, no ecomorph
+pgls.OU1 <- gls(HTotal ~SVL, correlation = corMartins(0,phy = anole.tree,form=~Species),data = anole.log, method = "ML")
+
+#PGLS under OU, w, ecomorph
+pgls.OU2 <- gls(HTotal ~SVL * Ecomorph2, correlation = corMartins(0,phy = anole.tree,form=~Species),data = anole.log, method = "ML")
+```
+
+### Determining model fits with AIC
+
+```{r, "AIC"}
+#AIC operations
+anole.phylo.aic <- AICc(pgls.BM1,pgls.BM2,pgls.OU1,pgls.OU2)
+anole.phylow.aicw <- aicw(anole.phylo.aic$AICc) 
+
+print(anole.phylow.aicw)
+rownames <- rownames(anole.phylow.aicw)
+print(rownames)
+rownames(anole.phylow.aicw) <- c('PGLS under BM and no ecomorph', 'PGLS under BM with ecomorph', 'PGLS under OU with no ecomorph', 'PGLS under OU with ecomorph')
+
+# Descriptive caption for "AIC" chunk
+anole.phylow.aicw %>% 
+  kable(caption = "This table displays AIC values with kable allows for a comparison of ecomorph 
+model fits using Akaike Information Criterion.")
+```
+
+### Accounting for Standard Error in Data Through the Creation of Residuals
+```{r, "add residuals"}
+#add phylo-corrected residuals
+anole.log <- anole.log%>%
+  mutate(phylo.res=residuals(pgls.BM2))
+```
+
+### Plot of Snout-Vent Length Against Mean Total Hind-Limb Length, Color Coded by Ecomorph
+```{r, "HTotal vs SVL", fig.cap="Mean snout-vent length plotted against mean total hind-limb length, color-coded by ecomorph"}
+anole.log%>%
+  ggplot(aes(HTotal,SVL,col=Ecomorph2))+geom_point()+geom_smooth(method="lm")
+```
+  
+### Regression plot of log-transformed HTotal vs SVL
+```{r, "Regression plot", fig.cap="Boxplot of phylogenetically corrected hindlimb residuals versus anole ecomorph"}
+print(anole)
+anole.log.plot <- anole%>%
+  left_join(anole.eco)%>%
+  filter(!Ecomorph%in%c("U","CH"))%>%
+  na.omit()%>%
+  mutate_at(c("HTotal"),log)%>%
+  rename("log_HTotal" = "HTotal")%>% 
+  ggplot(aes(x=log_HTotal, y=SVL, col=Ecomorph2))+geom_point() + geom_smooth(method = "lm")
+
+print(anole.log.plot)
+  
+```
+
+### Plot of Phylogenetically Corrected Hindlimb Residuals Against Anole Ecomorph
+```{r,"plot residuals", fig.cap="Boxplot of phylogenetically corrected hindlimb residuals versus anole ecomorph"}
+
+p.eco.phylo <- anole.log %>%
+  ggplot(aes(x=Ecomorph2,y=phylo.res)) +geom_boxplot() +stat_summary(fun=mean, geom="point", size=3)
+
+print(p.eco.phylo)
+```
+
+# Results
+Results from Ecomorph2 allow us to determine there is a correlation between HTotal and SVL. There are differences within each anole ecomorph with crown-giant showing the greatest correlation of HTotal and SVL compared to the other species studied. The comparison of the data allows us to determine the differences among species and how different sizes and variations play a role upon evolution. 
+
+  
+# Discussion
+Importance of the results further show there are significant ways to show the morphological and allometric differences among ecomorphs. There exists different relationships, including correlation among different lengths between snout-vent/hind-limb length that can be studied and evaluated to understand evolution. There are multiple variations within different species that can be concluded which further allow for the correlating evaluation between size relationships, frequency, and evolution. 
+  
+# Author Contributions
+The Overbytes team worked together to create this project. Teresa worked on the code portion, knitting, and questions. Joe worked on importing images and hitting all the questions. Courtney worked on the discussion, results and editing. John worked on the bibliography, the methods, and fixing problems. 
+
+
+# References
